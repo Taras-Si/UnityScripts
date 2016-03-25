@@ -13,7 +13,7 @@ public class MainCamera : MonoBehaviour {
     private float xLeft; //left screen x coordination 
     private float xRight; // right screen x coordination 
     private float margin = 75.0f; //space between fighters and screen 
-    private float z0 = 25f;
+    private float z0 = 25f; // space between player and camera spawns?
 
     //my methods
     private void calculateScreen(Transform fighter1pos,Transform fighter2pos)
