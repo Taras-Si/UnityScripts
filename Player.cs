@@ -3,26 +3,55 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-    public float playerSpeed = 5.0f;
-    public Vector2 jump;
+    public float playerSpeed = 10.0f;
+    public Animator anim;
+    int JumpHash = Animator.StringToHash("Jump");
+    public float jumpSpeed = 8.0f;
+    public float gravity = 20.0f;
+    private Vector3 moveDirection = Vector3.zero;
 
 	// Use this for initialization
 	void Start () {
 
         // player spawn point
 
-        transform.position = new Vector3(0, 3, 0);
-
-        //transform.rotation = new Quaternion(0, 180, 0, 0);
+        transform.position = new Vector3(0, 3, -25);
+        anim = GetComponent<Animator>();
+        
     }
 	
 	// Update is called once per frame
-	void Update (){
+	void Update () {
 
-        transform.Translate(Vector3.left * Input.GetAxis("Horizontal") * playerSpeed * Time.deltaTime);
-        if (Input.GetKey("space"))
+
+        
+       float move = Input.GetAxis("Horizontal");
+        anim.SetFloat("Speed", move);
+
+        
+        CharacterController controller = GetComponent<CharacterController>();
+        if (controller.isGrounded)
         {
-            GetComponent<Rigidbody2D>().AddForce(jump, ForceMode2D.Impulse);
+            moveDirection = new Vector3(Input.GetAxis("Horizontal")*-1, 0,0);
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= playerSpeed;
+
+
+
+            if (Input.GetButton("Jump"))
+            {
+                anim.SetTrigger(JumpHash);
+                moveDirection.y = jumpSpeed;
+            }
+            
         }
+
+        moveDirection.y -= gravity * Time.deltaTime;
+        controller.Move(moveDirection * Time.deltaTime); 
+            
+            
+        
+
+        
 	}
 }
